@@ -1,7 +1,7 @@
-import React from "react";
+import Tool from "./components/Tool";
 
 export default {
   title: "Gallery",
   name: "gallery",
-  component: () => <h1>Hello from your plugin!</h1>
+  component: Tool
 };

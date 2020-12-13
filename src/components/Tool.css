@@ -1,0 +1,30 @@
+@import 'part:@sanity/base/theme/variables-style';
+
+.root {
+  padding: var(--medium-padding);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: var(--medium-padding);
+}
+
+.img {
+  width: 100%;
+  max-width: 100%;
+}
+
+.imgPlaceholder {
+  background: var(--gray-lighter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @nest &:after {
+    content: '';
+    display: block;
+    /* 10:6 aspect ratio */
+    padding-top: 60%;
+  }
+}
