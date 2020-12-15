@@ -5,6 +5,19 @@ import { StateLink, withRouterHOC } from 'part:@sanity/base/router';
 import client from 'part:@sanity/base/client';
 import styles from './Tool.css';
 
+const Dialog = props => {
+  const { image, onClose } = props;
+  const { assetId } = image;
+
+  return (
+    <DefaultDialog title={assetId} size="large" onClose={onClose} onClickOutside={onClose}>
+      {image && <img className={styles.dialogImg} src={`${image.url}?auto=format`} alt={assetId} />}
+
+      {!image && 'Image not found :/'}
+    </DefaultDialog>
+  );
+};
+
 const Tool = props => {
   const [images, setImages] = React.useState([]);
   const [isLoaded, setIsLoaded] = React.useState(false);
@@ -12,6 +25,8 @@ const Tool = props => {
   const selectedAssetId = router.state.assetId;
 
   const closeDialog = () => router.navigate({});
+
+  const getImage = assetId => images.find(img => img.assetId === assetId);
 
   if (!isLoaded) {
     console.log('go fetch');
@@ -43,36 +58,13 @@ const Tool = props => {
     })
     : 'No images found :(';
 
-  const Dialog = () => {
-    const image = images.find(img => img.assetId === selectedAssetId);
-
-    return (
-      <DefaultDialog
-        title={selectedAssetId}
-        size="large"
-        onClose={closeDialog}
-        onClickOutside={closeDialog}
-      >
-        {image ? (
-          <img
-            className={styles.dialogImg}
-            src={`${image.url}?auto=format`}
-            alt={selectedAssetId}
-          />
-        ) : (
-          'Image not found :/'
-        )}
-      </DefaultDialog>
-    );
-  };
-
   return (
     <div className={styles.root}>
       <h1>Image Gallery</h1>
 
       <div className={styles.grid}>{isLoaded ? gallery : placeholders}</div>
 
-      {selectedAssetId && <Dialog />}
+      {selectedAssetId && <Dialog image={getImage(selectedAssetId)} onClose={closeDialog} />}
     </div>
   );
 };
