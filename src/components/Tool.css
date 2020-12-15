@@ -2,6 +2,12 @@
 
 .root {
   background: white;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1232px;
+  margin: 0 auto;
   padding: var(--medium-padding);
   padding-bottom: var(--extra-large-padding);
 }

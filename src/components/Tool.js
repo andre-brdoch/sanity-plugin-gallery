@@ -6,10 +6,11 @@ import Gallery from './Gallery';
 import styles from './Tool.css';
 
 const Tool = props => {
-  const [images, setImages] = React.useState([]);
-  const [isLoaded, setIsLoaded] = React.useState(false);
   const { router } = props;
   const selectedAssetId = router.state.assetId;
+
+  const [images, setImages] = React.useState([]);
+  const [isLoaded, setIsLoaded] = React.useState(false);
 
   const fetchImages = () => {
     console.log('go fetch');
@@ -31,13 +32,15 @@ const Tool = props => {
 
   return (
     <div className={styles.root}>
-      <h1>Image Gallery</h1>
+      <div className={styles.container}>
+        <h1>Image Gallery</h1>
 
-      <Gallery images={images} isLoaded={isLoaded} />
+        <Gallery images={images} isLoaded={isLoaded} />
 
-      {selectedAssetId && (
-        <Dialog image={getImage(selectedAssetId)} isLoaded={isLoaded} onClose={closeDialog} />
-      )}
+        {selectedAssetId && (
+          <Dialog image={getImage(selectedAssetId)} isLoaded={isLoaded} onClose={closeDialog} />
+        )}
+      </div>
     </div>
   );
 };
