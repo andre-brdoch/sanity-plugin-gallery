@@ -1,7 +1,9 @@
 @import 'part:@sanity/base/theme/variables-style';
 
 .root {
+  background: white;
   padding: var(--medium-padding);
+  padding-bottom: var(--extra-large-padding);
 }
 
 .grid {
@@ -13,6 +15,7 @@
 .img {
   width: 100%;
   max-width: 100%;
+  cursor: pointer;
 }
 
 .imgPlaceholder {
@@ -27,4 +30,10 @@
     /* 10:6 aspect ratio */
     padding-top: 60%;
   }
+}
+
+.dialogImg {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
 }
