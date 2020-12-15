@@ -59,11 +59,7 @@ const Tool = props => {
   const { router } = props;
   const selectedAssetId = router.state.assetId;
 
-  const closeDialog = () => router.navigate({});
-
-  const getImage = assetId => images.find(img => img.assetId === assetId);
-
-  if (!isLoaded) {
+  const fetchImages = () => {
     console.log('go fetch');
     const query = '*[_type == "sanity.imageAsset"]';
     client
@@ -73,7 +69,13 @@ const Tool = props => {
         setIsLoaded(true);
       })
       .catch(() => setIsLoaded(true));
-  }
+  };
+
+  const closeDialog = () => router.navigate({});
+
+  const getImage = assetId => images.find(img => img.assetId === assetId);
+
+  if (!isLoaded) fetchImages();
 
   return (
     <div className={styles.root}>
