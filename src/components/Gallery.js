@@ -13,7 +13,7 @@ const Gallery = props => {
         && hasImages
         && images.map(image => {
           const { url, assetId } = image;
-          const src = `${url}?w=1000&h=600&fit=crop&crop=center&auto=format`;
+          const src = `${url}?w=400&h=240&fit=crop&crop=center&auto=format`;
 
           return (
             <StateLink state={{ assetId }} key={assetId}>
