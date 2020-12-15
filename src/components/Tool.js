@@ -1,15 +1,17 @@
 import React from 'react';
 import DefaultDialog from 'part:@sanity/components/dialogs/default';
 import Spinner from 'part:@sanity/components/loading/spinner';
+import { StateLink, withRouterHOC } from 'part:@sanity/base/router';
 import client from 'part:@sanity/base/client';
 import styles from './Tool.css';
 
-export default () => {
+const Tool = props => {
   const [images, setImages] = React.useState([]);
   const [isLoaded, setIsLoaded] = React.useState(false);
-  const [selectedAssetId, setSelectedAssetId] = React.useState(null);
+  const { router } = props;
+  const selectedAssetId = router.state.assetId;
 
-  const closeDialog = () => setSelectedAssetId(null);
+  const closeDialog = () => router.navigate({});
 
   if (!isLoaded) {
     console.log('go fetch');
@@ -17,7 +19,6 @@ export default () => {
     client
       .fetch(query)
       .then(imageAssets => {
-        console.log(imageAssets);
         setImages(imageAssets);
         setIsLoaded(true);
       })
@@ -35,13 +36,9 @@ export default () => {
       const { url, assetId } = image;
       const src = `${url}?w=1000&h=600&fit=crop&crop=center&auto=format`;
       return (
-        <img
-          src={src}
-          alt={assetId}
-          key={assetId}
-          className={styles.img}
-          onClick={() => setSelectedAssetId(assetId)}
-        />
+        <StateLink state={{ assetId }} key={assetId}>
+          <img src={src} alt={assetId} className={styles.img} />
+        </StateLink>
       );
     })
     : 'No images found :(';
@@ -79,3 +76,5 @@ export default () => {
     </div>
   );
 };
+
+export default withRouterHOC(Tool);
