@@ -5,15 +5,50 @@ import { StateLink, withRouterHOC } from 'part:@sanity/base/router';
 import client from 'part:@sanity/base/client';
 import styles from './Tool.css';
 
-const Dialog = props => {
-  const { image, onClose } = props;
-  const { assetId } = image;
+const Gallery = props => {
+  const { isLoaded, images } = props;
+  const hasImages = images.length > 0;
 
   return (
-    <DefaultDialog title={assetId} size="large" onClose={onClose} onClickOutside={onClose}>
-      {image && <img className={styles.dialogImg} src={`${image.url}?auto=format`} alt={assetId} />}
+    <div className={styles.grid}>
+      {isLoaded
+        && hasImages
+        && images.map(image => {
+          const { url, assetId } = image;
+          const src = `${url}?w=1000&h=600&fit=crop&crop=center&auto=format`;
 
-      {!image && 'Image not found :/'}
+          return (
+            <StateLink state={{ assetId }} key={assetId}>
+              <img src={src} alt={assetId} className={styles.img} />
+            </StateLink>
+          );
+        })}
+
+      {isLoaded && !hasImages && 'No images found :('}
+
+      {!isLoaded
+        && [1, 2, 3].map(i => (
+          <div className={styles.imgPlaceholder} key={i}>
+            <Spinner center />
+          </div>
+        ))}
+    </div>
+  );
+};
+
+const Dialog = props => {
+  const { image, isLoaded, onClose } = props;
+  const title = image ? image.assetId : 'Not found';
+
+  return (
+    <DefaultDialog title={title} size="large" onClose={onClose} onClickOutside={onClose}>
+      {isLoaded && image && (
+        <img className={styles.dialogImg} src={`${image.url}?auto=format`} alt={title} />
+      )}
+
+      {isLoaded && !image && 'Image not found :/'}
+
+      {!isLoaded && <Spinner center />}
     </DefaultDialog>
   );
 };
@@ -40,31 +75,15 @@ const Tool = props => {
       .catch(() => setIsLoaded(true));
   }
 
-  const placeholders = [1, 2, 3].map(i => (
-    <div className={styles.imgPlaceholder} key={i}>
-      <Spinner center />
-    </div>
-  ));
-
-  const gallery = images.length > 0
-    ? images.map(image => {
-      const { url, assetId } = image;
-      const src = `${url}?w=1000&h=600&fit=crop&crop=center&auto=format`;
-      return (
-        <StateLink state={{ assetId }} key={assetId}>
-          <img src={src} alt={assetId} className={styles.img} />
-        </StateLink>
-      );
-    })
-    : 'No images found :(';
-
   return (
     <div className={styles.root}>
       <h1>Image Gallery</h1>
 
-      <div className={styles.grid}>{isLoaded ? gallery : placeholders}</div>
+      <Gallery images={images} isLoaded={isLoaded} />
 
-      {selectedAssetId && <Dialog image={getImage(selectedAssetId)} onClose={closeDialog} />}
+      {selectedAssetId && (
+        <Dialog image={getImage(selectedAssetId)} isLoaded={isLoaded} onClose={closeDialog} />
+      )}
     </div>
   );
 };
